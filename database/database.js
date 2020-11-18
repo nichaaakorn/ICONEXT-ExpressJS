@@ -2,14 +2,13 @@ const sql = require("mssql");
 
 // config for your database
 var config = {
-    user: "sa",
-    password: "123456",
-    server: "DESKTOP-IUI17M2", // You can use 'localhost\\instance' to connect to named instance
-    database: "ICONEXTContext-1",
+    user: 'sa',
+    password: '123456',
+    server: 'DESKTOP-EFJF16O', // You can use 'localhost\\instance' to connect to named instance
+    database: 'ICONEXTContext-1',
     options: {
-        "enableArithAbort": true,
-        "encrypt": true,
-
+        enableArithAbort: true,
+        encrypt: true,
     },
 }
 

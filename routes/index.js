@@ -28,8 +28,11 @@ router.post('/createproject', async function (req, res, next) {
   const partnerProject = req.body.partnerProject;
   const custtomerProject = req.body.customerProject;
   const dateProject = req.body.dateProject;
+
   const addProject = [projectName, partnerProject, custtomerProject, dateProject];
+
   await db.addProject(addProject);
+
   res.redirect('/project');
 });
 
@@ -49,6 +52,7 @@ router.get('/project/viewproject/:PID/:TID', async function (req, res, next) {
   const getStaff = await db.getStaff();
   const getOutsouce = await db.getOutsouce();
   const getPosition = await db.getPosition();
+
   var output;
   if (getTasksByTID.recordset.length == 0) {
     output = {
@@ -65,8 +69,11 @@ router.get('/project/viewproject/:PID/:TID', async function (req, res, next) {
   }
   res.render('ViewProject',
     {
-      Projects: getprojectByID.recordset[0], Tasks: getTasksProject.recordset, Phases: getPhase.recordset,
-      Outsource: getOutsouce.recordset, Staffs: getStaff.recordset, oneTask: output,
+      Projects: getprojectByID.recordset[0],
+      Tasks: getTasksProject.recordset,
+      Phases: getPhase.recordset,
+      Outsource: getOutsouce.recordset,
+      Staffs: getStaff.recordset, oneTask: output,
       Positions: getPosition.recordset
     }
   );
@@ -102,8 +109,11 @@ router.post('/createphase', async function (req, res, next) {
   const Role = req.body.Position;
   const Usage = req.body.Usage;
   const TID = req.body.TID;
+
   const addPhase = [Phase, StartDate, EndDate, Manpower, Role, Usage, TID]
+
   await db.addPhase(addPhase);
+
   res.redirect(`/project/viewproject/${PID}/${TID}`);
 });
 
@@ -312,6 +322,33 @@ router.post('/deleteleave', async function (req, res, next) {
   res.redirect(`/viewleave/${ID}`);
 });
 
+router.get('/Holiday', async function (req, res, next) {
+  const result = await db.getHoliday();
+  let ArrayCalender = [];
+  for (const key in result.recordset) {
+    if (result.recordset.hasOwnProperty(key)) {
+      ArrayCalender[key] = {
+        title: result.recordset[key].Subject,
+        start: result.recordset[key].Start_Date,
+        end: result.recordset[key].End_Date
+      }
+    }
+  }
+  res.render('Holiday', { Holidays: result.recordset });
+});
 
+router.post('/addHoliday', async function (req, res, next) {
+  const Subject = req.body.Subject
+  const StartDate = req.body.StartDate;
+  const EndDate = req.body.EndDate;
+  const setStartDate = StartDate.substring(8, 10) + "/" + StartDate.substring(5, 7) + "/" + StartDate.substring(0, 4)
+  const setEndDate = EndDate.substring(8, 10) + "/" + EndDate.substring(5, 7) + "/" + EndDate.substring(0, 4)
+
+  const addHoliday = [Subject, setStartDate, setEndDate];
+
+  await db.addHoliday(addHoliday);
+
+  res.redirect('/Holiday');
+});
 
 module.exports = router;

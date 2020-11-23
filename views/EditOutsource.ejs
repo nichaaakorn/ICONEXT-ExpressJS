@@ -18,8 +18,8 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <a class="navbar-brand" href="/project">ICONNEXT</a>
         <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+                <span class="navbar-toggler-icon"></span>
+            </button>
         <div class="collapse navbar-collapse" id="collapsibleNavId">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
@@ -32,7 +32,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master Data Management</a>
                     <div class="dropdown-menu" aria-labelledby="dropdownId">
                         <a class="dropdown-item" href="/Manpower/staff">Manpower</a>
-                        <a class="dropdown-item" href="#">Holiday</a>
+                        <a class="dropdown-item" href="/Holiday">Holiday</a>
                         <a class="dropdown-item" href="/leave/staff">Leave</a>
                         <a class="dropdown-item" href="/position">Position</a>
                         <a class="dropdown-item" href="#">Project Position</a>
@@ -55,12 +55,12 @@
                     <div class="col">
                         <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Title</label>
                         <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" name="Title" required>
-                            <option selected><%= Staffs.Title %></option>
-                            <option value="Mr.">Mr.</option>
-                            <option value="Mrs.">Mrs.</option>
-                            <option value="Miss.">Miss.</option>
-                            <option value="Dr.">Dr.</option>
-                        </select>
+                                <option selected><%= Staffs.Title %></option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Miss.">Miss.</option>
+                                <option value="Dr.">Dr.</option>
+                            </select>
                     </div>
                 </div>
                 <div class="form-row">
@@ -81,11 +81,11 @@
                     <div class="col">
                         <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Position</label>
                         <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" name="Position">
-                            <option selected><%= Staffs.Position %></option>
-                            <% Positions.forEach(function(position){ %>
-                            <option value="<%= position.Description %>"><%= position.Description %></option>
-                            <% }); %>
-                        </select>
+                                <option selected><%= Staffs.Position %></option>
+                                <% Positions.forEach(function(position){ %>
+                                <option value="<%= position.Description %>"><%= position.Description %></option>
+                                <% }); %>
+                            </select>
                     </div>
                 </div>
                 <div class="form-row">

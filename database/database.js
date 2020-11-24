@@ -5,7 +5,7 @@ var config = {
     user: 'sa',
     password: '123456',
     server: 'DESKTOP-EFJF16O', // You can use 'localhost\\instance' to connect to named instance
-    database: 'ICONEXTContext-1',
+    database: 'ICONEXT',
     options: {
         enableArithAbort: true,
         encrypt: true,

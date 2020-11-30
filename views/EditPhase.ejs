@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Manpower</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="/project">ICONEXT</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/project">Project Management</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master Data Management</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownId">
+                        <a class="dropdown-item" href="/Manpower/staff">Manpower</a>
+                        <a class="dropdown-item" href="/Holiday">Holiday</a>
+                        <a class="dropdown-item" href="/leave/staff">Leave</a>
+                        <a class="dropdown-item" href="/position">Position</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="h1 font-weight-bold mt-3 mb-3 text-center">Edit Phase</div>
+        <form action="/updatephase" method="POST">
+            <div class="col-5 m-auto">
+                <div class="">
+                    <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Phase</label>
+                    <input autocomplete="off" type="text" class="form-control" name="Phase" value="<%=Phase.Phase %>">
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref">StartDate</label>
+                        <input type="date" class="form-control" name="StartDate" value="<%=Phase.StartDate %>">
+                    </div>
+                    <div class="col-6">
+                        <label class="my-1 mr-2" for="inlineFormCustomSelectPref">EndDate</label>
+                        <input type="date" class="form-control" name="EndDate" value="<%=Phase.EndDate%>">
+                    </div>
+                </div>
+                <div class="">
+                    <label class=" my-1 mr-2" for="inlineFormCustomSelectPref">Manpower</label>
+                    <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" name="Manpower">
+                        <option selected><%= Phase.Manpower %></option>
+                        <% Staffs.forEach(function(staff){ %>
+                        <option value="<%= staff.Name + " " + staff.SurName %>">
+                            <%= staff.Name + " " +staff.SurName %>
+                        </option>
+                        <% }); %>
+                        <% Outsource.forEach(function(outsource){ %>
+                        <option value="<%= outsource.Name + " " + outsource.SurName %>">
+                            <%= outsource.Name + " " +outsource.SurName %>
+                        </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="">
+                    <label class=" my-1 mr-2" for="inlineFormCustomSelectPref">Role</label>
+                    <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" name="Position">
+                        <option selected><%=Phase.Role%></option>
+                        <% Positions.forEach(function(position){ %>
+                        <option value="<%= position.Description %>"><%= position.Description %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="">
+                    <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Usage</label>
+                    <input autocomplete="off" type="text" class="form-control" name="Usage" value="<%=Phase.Usage %>">
+                </div>
+                <div class="text-center mt-3 mb-3">
+                    <input type="hidden" name="PID" value="<%= Project %>">
+                    <input type="hidden" name="ID" value="<%= Phase.ID %>">
+                    <input type="hidden" name="TID" value="<%= Phase.TID %>">
+                    <button type="submit" class="btn btn-primary font-weight-bold">Confirm</button>
+                    <a href="/project/viewproject/<%= Project %>/<%= Phase.TID %>">
+                        <button type="button" class="btn btn-danger">Cancel</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>

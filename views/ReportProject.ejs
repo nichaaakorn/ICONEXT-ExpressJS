@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Project Position</title>
+    <title>Project</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -36,56 +36,38 @@
     </nav>
 
     <div class="container mt-5">
-        <div class="text-left font-weight-bold h1 mb-5">
-            <%= Project.Name %>
+        <div class="row d-flex align-items-center mb-3">
+            <div class="text-left font-weight-bold h1">
+                <%= Project.Name %>
+            </div>
+            <div class="ml-4">
+                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <b>Select Month In Project</b>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <% Months.forEach(function(data){%>
+                        <form action="/report/<%= Project.PID %>/<%= data.Month %>">
+                            <button class="dropdown-item" type="submit"><%= data.Month %></button>
+                        </form>
+                        <%})%>
+                </div>
+            </div>
+            <div class="ml-4 font-weight-bold h1">
+                <%= monthName %>
+            </div>
         </div>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th style="font-weight: bold;">Name</th>
-                    <th style="font-weight: bold;" class="text-center">Position</th>
-                    <th style="font-weight: bold;" class="text-center">Cost / Month</th>
-                    <th style="font-weight: bold;" class="text-center">Usage</th>
-                    <th style="font-weight: bold;" class="text-center">Cost</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% Manpowers.forEach(function(data){%>
-                    <tr>
-                        <td class="font-weight-bold">
-                            <%= data.Name %>
-                        </td>
-                        <td class="text-center font-weight-bold">
-                            <%= data.Position %>
-                        </td>
-                        <td class="text-center font-weight-bold">
-                            <%= data.CostMonth.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                        </td>
-                        <td class="text-center font-weight-bold">
-                            <%= data.Usage %>
-                        </td>
-                        <td class="text-center font-weight-bold">
-                            <%= data.Cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
-                        </td>
-                    </tr>
-                    <% })%>
-                        <tr>
-                            <td class="font-weight-bold"></td>
-                            <td class="text-center font-weight-bold"></td>
-                            <td class="text-center font-weight-bold"></td>
-                            <td class="text-center font-weight-bold"></td>
-                            <td class="text-center font-weight-bold" style="background-color:#3399FF ; color: white;">
-                                <%= Total %>
-                            </td>
-                        </tr>
-            </tbody>
-        </table>
+        <canvas id="myChart" width="400" height="200"></canvas>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="/javascripts/chart.js"></script>
+    <script>
+        getChart('<%- JSON.stringify(ObjectManpower) %>', '<%- JSON.stringify(Holiday) %>', '<%- JSON.stringify(monthTarget) %>');
+    </script>
 </body>
 
 </html>

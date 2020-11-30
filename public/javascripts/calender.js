@@ -19,7 +19,7 @@ function getCalender(data) {
             }
         }
     }
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -31,7 +31,7 @@ function getCalender(data) {
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             events: eventObj,
-            dateClick: function (info) {
+            dateClick: function(info) {
                 $("#showModal").empty();
                 const createModal =
                     /*html*/
@@ -45,7 +45,7 @@ function getCalender(data) {
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label for="Subject">Subject</label>
-                                            <input type="text" class="form-control" name="Subject" id="Subject"
+                                            <input autocomplete="off" type="text" class="form-control" name="Subject" id="Subject"
                                                 aria-describedby="helpId" placeholder="Subject" required>
                                         </div>
                                         <div class="form-group">
@@ -66,7 +66,7 @@ function getCalender(data) {
                 $("#showModal").append(createModal);
                 $("#myModal").modal();
             },
-            eventClick: function (info) {
+            eventClick: function(info) {
                 console.log(info);
                 $("#showModal").empty();
                 const createModal =

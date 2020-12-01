@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-info">
         <a class="navbar-brand" href="/project">ICONEXT</a>
         <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -131,13 +131,13 @@
             <div class="h1 font-weight-bold mb-3">
                 <%= Projects.Name %>
             </div>
-            <a href="" class=" btn btn-primary btn-rounded font-weight-bold mb-4" data-toggle="modal" data-target="#modalCreateTasks">Add Tasks</a>
+            <a href="" class=" btn btn-warning btn-rounded font-weight-bold mb-4" data-toggle="modal" data-target="#modalCreateTasks">Add Tasks</a>
         </div>
         <div class="list-group" id="list-tab" role="tablist">
             <% Tasks.forEach(function(task){ %>
                 <div class="row mb-2">
                     <div class="col">
-                        <a class="list-group-item list-group-item-action mt-2 font-weight-bold" href="/project/viewproject/<%= Projects.PID %>/<%= task.TID %>" role=" tab" aria-controls="home" style="border-radius: 5px;">
+                        <a class="list-group-item list-group-item-action mt-2 font-weight-bold text-white" style="background-color: rgb(199, 79, 175);" href="/project/viewproject/<%= Projects.PID %>/<%= task.TID %>" role=" tab" aria-controls="home" style="border-radius: 5px;">
                             <%= task.Tasks%>
                         </a>
                     </div>
@@ -169,11 +169,11 @@
                 </div>
             </div>
             <div class="text-right mb-3">
-                <a href="" class="btn btn-info font-weight-bold" data-toggle="modal" data-target="#modalAddPhase">Add
+                <a href="" class="btn btn-warning font-weight-bold" data-toggle="modal" data-target="#modalAddPhase">Add
                     Phase</a>
             </div>
         </div>
-        <table class="table table-hover">
+        <table class="table table-hover table-primary">
             <thead>
                 <tr>
                     <th scope="col">Phase</th>

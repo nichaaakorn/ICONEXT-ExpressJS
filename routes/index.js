@@ -553,17 +553,17 @@ router.get('/report/:PID/:Month', async function(req, res, next) {
         if (getIdEmployee.recordset[0] != null) {
             nameManpower = getManpower.recordset[key].Manpower;
             // Leave
-            var getLeaveDay = await db.getLeaveInMonth(getIdEmployee.recordset[0].EID, month)
+            var getLeaveDay = await db.getLeaveInMonth(getIdEmployee.recordset[0].EID, monthModify)
         } else {
 
             nameManpower = getManpower.recordset[key].Manpower;
 
-            var getLeaveDay = await db.getLeaveInMonth(getIdOutsource.recordset[0].ID, month)
+            var getLeaveDay = await db.getLeaveInMonth(getIdOutsource.recordset[0].ID, monthModify)
         }
 
         manpowerObject[key] = {
             Name: nameManpower,
-            Leave: getLeaveDay.recordset[0],
+            Leave: getLeaveDay.recordset,
         }
     }
     res.render('ReportProject', {

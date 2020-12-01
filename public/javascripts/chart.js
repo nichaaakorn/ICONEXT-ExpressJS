@@ -16,9 +16,11 @@ const getChart = (ObjectManpower, Holiday, MonthTarget) => {
     var workTotalHour = (getDaysInMonth.length * 8)
     for (const key in Manpower) {
         var totalWork = 0;
-        if (Manpower[key].Leave != null) {
-            // console.log(Manpower[key].Name);
-            var leaveDate = parseInt(Manpower[key].Leave.Days);
+        var leaveDate = 0;
+        if (Manpower[key].Leave.length != 0) {
+            for (const i in Manpower[key].Leave) {
+                leaveDate = leaveDate + parseInt(Manpower[key].Leave[i].Days);
+            }
             totalWork = ((getDaysInMonth.length - leaveDate) * 8)
         } else {
             totalWork = getDaysInMonth.length * 8

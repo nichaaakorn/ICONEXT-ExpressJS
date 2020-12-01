@@ -703,6 +703,34 @@ async function getLeaveInMonth(ID, Month) {
     }
 }
 
+async function getHolidayBetweenDate(StartDate, EndDate, Month) {
+    try {
+        const pool = await sql.connect(config);
+        const query = `select Start_Date from Holiday
+        where Start_Date >= '${StartDate}' and Start_Date <= '${EndDate}'
+        and Start_Date LIKE '%%/${Month}/%%%%';`;
+        const result = await pool.request()
+            .query(query)
+        return result
+    } catch (err) {
+        console.log("MESSAGE " + err.message);
+    }
+}
+
+async function getLeaveBetweenDate(StartDate, EndDate, ID) {
+    try {
+        const pool = await sql.connect(config);
+        const query = `select Days from Leave
+        where StartDate >= '${StartDate}' and EndDate <= '${EndDate}'
+		and ID = '${ID}'`;
+        const result = await pool.request()
+            .query(query)
+        return result
+    } catch (err) {
+        console.log("MESSAGE " + err.message);
+    }
+}
+
 
 
 module.exports = {
@@ -755,4 +783,6 @@ module.exports = {
     getMonthInProject,
     getHolidayInMonth,
     getLeaveInMonth,
+    getHolidayBetweenDate,
+    getLeaveBetweenDate
 }

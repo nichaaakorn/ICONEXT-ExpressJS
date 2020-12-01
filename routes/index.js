@@ -421,22 +421,71 @@ router.get('/projectposition/:PID', async function(req, res, next) {
     let ObjectManpowerUsage = [];
     let Usage, date;
 
-    // For นอกสุด วนตามจำนวนของพนักงานในโปรเจ็ค
+
     for (const key in Manpowers.recordset) {
         const element = Manpowers.recordset[key];
+
         const result = await db.getUsageByManpower(element.Manpower, PID);
+
+        const getIdEmployee = await db.checkIdEmployee(element.Manpower);
+        const getIdOutsource = await db.checkIdOutsouce(element.Manpower);
+
         let calculateUsage = 0;
 
-        // For ตัวในจะวนตาม Phase ของพนักงานนั้น ๆ
         for (const i in result.recordset) {
+
+
             Usage = result.recordset[i];
+
+
+
+            const StartDate = Usage.StartDate.substring(8, 10) + "/" + Usage.StartDate.substring(5, 7) + "/" + Usage.StartDate.substring(0, 4);
+            const EndDate = Usage.EndDate.substring(8, 10) + "/" + Usage.EndDate.substring(5, 7) + "/" + Usage.EndDate.substring(0, 4);
+            const Month = Usage.StartDate.substring(5, 7);
+
+
+
+            if (getIdEmployee.recordset[0] != null) {
+
+                var getLeaveDay = await db.getLeaveBetweenDate(Usage.StartDate, Usage.EndDate, getIdEmployee.recordset[0].EID)
+            } else {
+
+                var getLeaveDay = await db.getLeaveBetweenDate(Usage.StartDate, Usage.EndDate, getIdOutsource.recordset[0].ID)
+            }
+
+            var leaveDay = 0;
+            if (getLeaveDay.recordset[0] != null) {
+                leaveDay = getLeaveDay.recordset[0].Days
+            } else {
+                leaveDay = 0;
+            }
+
+
+            const DayHoliday = await db.getHolidayBetweenDate(StartDate, EndDate, Month)
+                //console.log(DayHoliday.recordset);
+
+
             date = await db.calculateDate(Usage);
-            calculateUsage = calculateUsage + (parseInt(Usage.Usage.substring(0, Usage.Usage.length - 1)) * date.recordset[0].Day);
-            indexArray++;
+
+
+            // Holiday, Leave
+            if (DayHoliday.recordset[0] != null) {
+                calculateUsage =
+                    calculateUsage + (parseInt(Usage.Usage) * ((date.recordset[0].Day - leaveDay) - DayHoliday.recordset.length));
+                indexArray++;
+
+                // not holiday,leave
+            } else {
+                calculateUsage =
+                    calculateUsage + (parseInt(Usage.Usage) * date.recordset[0].Day - leaveDay);
+                indexArray++;
+            }
+
         }
 
-        const Cost = parseFloat(((calculateUsage / 100) * element.Cost) / 20)
+        const Cost = parseInt(((calculateUsage / 100) * element.Cost) / 20)
 
+        // จากนั้นสุดท้ายจะเก็บพนักงานเป็น Object ไว้
         ObjectManpowerUsage[key] = {
             Name: element.Manpower,
             Position: element.Position,
@@ -444,9 +493,9 @@ router.get('/projectposition/:PID', async function(req, res, next) {
             Usage: parseFloat(calculateUsage / 100),
             Cost: Cost,
         }
-        console.log(ObjectManpowerUsage);
     }
 
+    // total
     let TotalCost = 0;
     for (const key in ObjectManpowerUsage) {
         if (ObjectManpowerUsage.hasOwnProperty(key)) {
@@ -456,7 +505,6 @@ router.get('/projectposition/:PID', async function(req, res, next) {
     }
     res.render('ProjectPosition', { Manpowers: ObjectManpowerUsage, Total: TotalCost, Project: Project.recordset[0] });
 });
-
 
 router.post('/report/:PID', async function(req, res, next) {
     const PID = req.params.PID;
@@ -472,23 +520,47 @@ router.get('/report/:PID/:Month', async function(req, res, next) {
         "August", "September", "October", "November", "December"
     ];
 
+
+    if (month.length == 1) {
+        var monthModify = "0" + month;
+    } else {
+        var monthModify = month;
+    }
+
+
     const getProject = await db.getProjectByID(PID);
-    const getManpower = await db.getManpowerOfProject(PID, month);
+
+
+    const getManpower = await db.getManpowerOfProject(PID, monthModify);
+
+
     const getHolidayInMonth = await db.getHolidayInMonth(month);
+
+
     const getMonthInProject = await db.getMonthInProject(PID);
 
     var manpowerObject = [];
     let nameManpower = "";
+
+
     for (const key in getManpower.recordset) {
+
+
         const getIdEmployee = await db.checkIdEmployee(getManpower.recordset[key].Manpower);
         const getIdOutsource = await db.checkIdOutsouce(getManpower.recordset[key].Manpower);
+
+
         if (getIdEmployee.recordset[0] != null) {
             nameManpower = getManpower.recordset[key].Manpower;
+            // Leave
             var getLeaveDay = await db.getLeaveInMonth(getIdEmployee.recordset[0].EID, month)
         } else {
+
             nameManpower = getManpower.recordset[key].Manpower;
+
             var getLeaveDay = await db.getLeaveInMonth(getIdOutsource.recordset[0].ID, month)
         }
+
         manpowerObject[key] = {
             Name: nameManpower,
             Leave: getLeaveDay.recordset[0],

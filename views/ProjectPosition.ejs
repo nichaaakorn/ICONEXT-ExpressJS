@@ -39,42 +39,42 @@
         <div class="text-left font-weight-bold h1 mb-5">
             <%= Project.Name %>
         </div>
-        <table class="table table-hover">
+        <table class="table table-hover table-secondary " style="background-color: rgb(36, 32, 35);">
             <thead>
                 <tr>
-                    <th style="font-weight: bold;">Name</th>
-                    <th style="font-weight: bold;" class="text-center">Position</th>
-                    <th style="font-weight: bold;" class="text-center">Cost / Month</th>
-                    <th style="font-weight: bold;" class="text-center">Usage</th>
-                    <th style="font-weight: bold;" class="text-center">Cost</th>
+                    <th style="font-weight: bold; color: rgb(250, 248, 248);">Name</th>
+                    <th style="font-weight: bold; color: rgb(250, 248, 248);" class="text-center">Position</th>
+                    <th style="font-weight: bold; color: rgb(250, 248, 248);" class="text-center">Cost / Month</th>
+                    <th style="font-weight: bold; color: rgb(250, 248, 248);" class="text-center">Usage</th>
+                    <th style="font-weight: bold; color: rgb(250, 248, 248);" class="text-center">Cost</th>
                 </tr>
             </thead>
             <tbody>
                 <% Manpowers.forEach(function(data){%>
                     <tr>
-                        <td class="font-weight-bold">
+                        <td class="font-weight-bold table-light">
                             <%= data.Name %>
                         </td>
-                        <td class="text-center font-weight-bold">
+                        <td class="text-center font-weight-bold table-light">
                             <%= data.Position %>
                         </td>
-                        <td class="text-center font-weight-bold">
+                        <td class="text-center font-weight-bold table-light">
                             <%= data.CostMonth.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                         </td>
-                        <td class="text-center font-weight-bold">
+                        <td class="text-center font-weight-bold table-light">
                             <%= data.Usage %>
                         </td>
-                        <td class="text-center font-weight-bold">
+                        <td class="text-center font-weight-bold table-light">
                             <%= data.Cost.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>
                         </td>
                     </tr>
                     <% })%>
                         <tr>
-                            <td class="font-weight-bold"></td>
-                            <td class="text-center font-weight-bold"></td>
-                            <td class="text-center font-weight-bold"></td>
-                            <td class="text-center font-weight-bold"></td>
-                            <td class="text-center font-weight-bold" style="background-color:#3399FF ; color: white;">
+                            <td class="font-weight-bold table-light"></td>
+                            <td class="text-center font-weight-bold table-light"></td>
+                            <td class="text-center font-weight-bold table-light"></td>
+                            <td class="text-center font-weight-bold table-light"></td>
+                            <td class="text-center font-weight-bold" style="background-color:#09a8e7 ; color: white;">
                                 <%= Total %>
                             </td>
                         </tr>

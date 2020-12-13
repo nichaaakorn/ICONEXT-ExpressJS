@@ -1,35 +1,15 @@
-const getChart = (ObjectManpower, Holiday, MonthTarget) => {
+const getChart = (ObjectManpower) => {
     const Manpower = JSON.parse(ObjectManpower);
-    const getHoliday = JSON.parse(Holiday);
-    const getDaysInMonth = getWeekdaysInmonth(new Date().getFullYear(), (parseInt(JSON.parse(MonthTarget)) - 1));
-    for (const array in getDaysInMonth) {
-        for (const days in getHoliday) {
-            const Holiday = parseInt(getHoliday[days].Start_Date.substring(0, 2))
-            if (Holiday == getDaysInMonth[array]) {
-                getDaysInMonth.splice(array, 1);
-            }
-        }
-    }
+
     let labels = [];
     let dataWork = [];
     let dataPlan = [];
-    var workTotalHour = (getDaysInMonth.length * 8)
-    for (const key in Manpower) {
-        var totalWork = 0;
-        var leaveDate = 0;
-        if (Manpower[key].Leave.length != 0) {
-            for (const i in Manpower[key].Leave) {
-                leaveDate = leaveDate + parseInt(Manpower[key].Leave[i].Days);
-            }
-            totalWork = ((getDaysInMonth.length - leaveDate) * 8)
-        } else {
-            totalWork = getDaysInMonth.length * 8
-        }
-        labels[key] = Manpower[key].Name
-        dataWork[key] = totalWork
-        dataPlan[key] = (workTotalHour - totalWork);
-    }
 
+    for (const key in Manpower) {
+        labels[key] = Manpower[key].Name
+        dataWork[key] = Manpower[key].Hour
+        dataPlan[key] = Manpower[key].TotalHour
+    }
 
     var ctx = document.getElementById('myChart');
     var myChart = new Chart(ctx, {

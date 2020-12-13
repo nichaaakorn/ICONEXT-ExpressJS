@@ -4,8 +4,8 @@ const sql = require("mssql");
 var config = {
     user: "sa",
     password: "123456",
-    server: "DESKTOP-IUI17M2", // You can use 'localhost\\instance' to connect to named instance
-    database: "ICONEXTContext-1",
+    server: "DESKTOP-EPN3ERQ", // You can use 'localhost\\instance' to connect to named instance
+    database: "ICONEXT_Database",
     options: {
         "enableArithAbort": true,
         "encrypt": true,
@@ -731,6 +731,53 @@ async function getLeaveBetweenDate(StartDate, EndDate, ID) {
     }
 }
 
+async function getUsageInMonth(Manpower, Month, Project) {
+    try {
+        const pool = await sql.connect(config);
+        const query = `SELECT Phase.StartDate , Phase.EndDate , Phase.Usage from Phase , Project , TasksProject
+        where Phase.TID = TasksProject.TID
+        and TasksProject.PID = Project.PID
+        and Phase.Manpower = '${Manpower}'	
+        and Phase.StartDate LIKE '%%%%-${Month}-%%'
+        and Project.Name = '${Project}'`;
+        const result = await pool.request()
+            .query(query)
+        return result
+    } catch (err) {
+        console.log("MESSAGE " + err.message);
+    }
+}
+
+async function getLeaveInPhase(ID, Object) {
+    try {
+        const pool = await sql.connect(config);
+        const query = `select Days from Leave
+        where ID = '${ID}'
+        and StartDate >= '${Object.StartDate}'
+        and EndDate <= '${Object.EndDate}'`;
+        const result = await pool.request()
+            .query(query)
+        return result
+    } catch (err) {
+        console.log("MESSAGE " + err.message);
+    }
+}
+
+async function getHolidayInPhase(StartDate, EndDate, Month) {
+    try {
+        const pool = await sql.connect(config);
+        const query = `select Start_Date from Holiday
+        where Start_Date >= '${StartDate}'
+        and Start_Date <= '${EndDate}'
+        and Start_Date LIKE '%%/${Month}/%%%%'`;
+        const result = await pool.request()
+            .query(query)
+        return result
+    } catch (err) {
+        console.log("MESSAGE " + err.message);
+    }
+}
+
 
 
 module.exports = {
@@ -784,5 +831,8 @@ module.exports = {
     getHolidayInMonth,
     getLeaveInMonth,
     getHolidayBetweenDate,
-    getLeaveBetweenDate
+    getLeaveBetweenDate,
+    getUsageInMonth,
+    getLeaveInPhase,
+    getHolidayInPhase,
 }

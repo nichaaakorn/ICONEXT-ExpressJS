@@ -19,7 +19,7 @@ function getCalender(data) {
             }
         }
     }
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -31,7 +31,9 @@ function getCalender(data) {
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             events: eventObj,
-            dateClick: function(info) {
+            dateClick: function (info) {
+                const formatDate = info.dateStr.substring(8, 10) + "/" + info.dateStr.substring(5, 7) + "/" + info.dateStr.substring(0, 4)
+
                 $("#showModal").empty();
                 const createModal =
                     /*html*/
@@ -40,7 +42,7 @@ function getCalender(data) {
                             <div class="modal-content">
                                 <form action="/addHoliday" method="POST" class="needs-validation" novalidate>
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Start Date ${info.dateStr}</h4>
+                                        <h4 class="modal-title">Start Date ${formatDate}</h4>
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group">
@@ -66,8 +68,7 @@ function getCalender(data) {
                 $("#showModal").append(createModal);
                 $("#myModal").modal();
             },
-            eventClick: function(info) {
-                console.log(info);
+            eventClick: function (info) {
                 $("#showModal").empty();
                 const createModal =
                     /*html*/

@@ -6,12 +6,12 @@ const db = require("../database/database");
 router.use(bodyParser.urlencoded({ extended: true }));
 
 /* GET home page. */
-router.get('/project', async function(req, res, next) {
+router.get('/project', async function (req, res, next) {
     const result = await db.getProject();
     res.render('index', { Projects: result.recordset });
 });
 
-router.post('/getOneTID', async function(req, res, next) {
+router.post('/getOneTID', async function (req, res, next) {
     const PID = req.body.PID;
     const getOneTID = await db.getOneTasksProject(PID);
     let TID;
@@ -23,7 +23,7 @@ router.post('/getOneTID', async function(req, res, next) {
     res.redirect(`/project/viewproject/${PID}/${TID}`);
 });
 
-router.post('/createproject', async function(req, res, next) {
+router.post('/createproject', async function (req, res, next) {
     const projectName = req.body.projectName;
     const partnerProject = req.body.partnerProject;
     const custtomerProject = req.body.customerProject;
@@ -36,13 +36,13 @@ router.post('/createproject', async function(req, res, next) {
     res.redirect('/project');
 });
 
-router.get('/project/editproject/:PID', async function(req, res, next) {
+router.get('/project/editproject/:PID', async function (req, res, next) {
     const PID = req.params.PID;
     const result = await db.getProjectByID(PID);
     res.render('EditProject', { Projects: result.recordset[0] });
 });
 
-router.get('/project/viewproject/:PID/:TID', async function(req, res, next) {
+router.get('/project/viewproject/:PID/:TID', async function (req, res, next) {
     const PID = req.params.PID;
     const TID = req.params.TID;
     const getprojectByID = await db.getProjectByID(PID);
@@ -52,6 +52,33 @@ router.get('/project/viewproject/:PID/:TID', async function(req, res, next) {
     const getStaff = await db.getStaff();
     const getOutsouce = await db.getOutsouce();
     const getPosition = await db.getPosition();
+
+    var objectPhase = [];
+    for (const key in getPhase.recordset) {
+        var formatStartDate =
+            getPhase.recordset[key].StartDate.substring(8, 10) + "/"
+            + getPhase.recordset[key].StartDate.substring(5, 7) + "/"
+            + getPhase.recordset[key].StartDate.substring(0, 4)
+
+        var formatEndDate =
+            getPhase.recordset[key].EndDate.substring(8, 10) + "/"
+            + getPhase.recordset[key].EndDate.substring(5, 7) + "/"
+            + getPhase.recordset[key].EndDate.substring(0, 4)
+
+
+        objectPhase[key] = {
+            ID: getPhase.recordset[key].ID,
+            Phase: getPhase.recordset[key].Phase,
+            StartDate: formatStartDate,
+            EndDate: formatEndDate,
+            Manpower: getPhase.recordset[key].Manpower,
+            Role: getPhase.recordset[key].Role,
+            Usage: getPhase.recordset[key].Usage,
+            TID: getPhase.recordset[key].TID,
+        }
+    }
+
+
 
     var output;
     if (getTasksByTID.recordset.length == 0) {
@@ -70,7 +97,7 @@ router.get('/project/viewproject/:PID/:TID', async function(req, res, next) {
     res.render('ViewProject', {
         Projects: getprojectByID.recordset[0],
         Tasks: getTasksProject.recordset,
-        Phases: getPhase.recordset,
+        Phases: objectPhase,
         Outsource: getOutsouce.recordset,
         Staffs: getStaff.recordset,
         oneTask: output,
@@ -78,13 +105,13 @@ router.get('/project/viewproject/:PID/:TID', async function(req, res, next) {
     });
 });
 
-router.get('/edittasks/:TID', async function(req, res, next) {
+router.get('/edittasks/:TID', async function (req, res, next) {
     const TID = req.params.TID;
     const result = await db.getTasksByTID(TID);
     res.render('EditTask', { Tasks: result.recordset[0] })
 });
 
-router.post('/updateTasks', async function(req, res, next) {
+router.post('/updateTasks', async function (req, res, next) {
     const TID = req.body.TID;
     const PID = req.body.PID;
     const TaskName = req.body.TaskName;
@@ -93,7 +120,7 @@ router.post('/updateTasks', async function(req, res, next) {
     res.redirect(`/project/viewproject/${PID}/${TID}`);
 });
 
-router.post('/createtasks', async function(req, res, next) {
+router.post('/createtasks', async function (req, res, next) {
     const PID = req.body.PID;
     const TaskName = req.body.tasksName;
     const addTask = [TaskName, PID];
@@ -102,7 +129,7 @@ router.post('/createtasks', async function(req, res, next) {
     res.redirect(`/project/viewproject/${PID}/${urlTID.recordset[0].TID}`);
 });
 
-router.post('/deletetasks', async function(req, res, next) {
+router.post('/deletetasks', async function (req, res, next) {
     const PID = req.body.PID;
     const TID = req.body.deleteTID;
     var urlTID = await db.getOneTasksProject(PID);
@@ -114,7 +141,7 @@ router.post('/deletetasks', async function(req, res, next) {
     res.redirect(`/project/viewproject/${PID}/${urlTID[0].TID}`);
 });
 
-router.get('/editphase/:PID/:ID', async function(req, res, next) {
+router.get('/editphase/:PID/:ID', async function (req, res, next) {
     const ID = req.params.ID;
     const PID = req.params.PID;
     const getStaff = await db.getStaff();
@@ -131,7 +158,7 @@ router.get('/editphase/:PID/:ID', async function(req, res, next) {
     })
 });
 
-router.post('/updatephase', async function(req, res, next) {
+router.post('/updatephase', async function (req, res, next) {
     const PID = req.body.PID;
     const TID = req.body.TID;
     const Phase = req.body.Phase;
@@ -147,7 +174,7 @@ router.post('/updatephase', async function(req, res, next) {
     res.redirect(`/project/viewproject/${PID}/${TID}`);
 });
 
-router.post('/createphase', async function(req, res, next) {
+router.post('/createphase', async function (req, res, next) {
     const PID = req.body.PID;
     const Phase = req.body.Phase;
     const StartDate = req.body.StartDate;
@@ -164,7 +191,7 @@ router.post('/createphase', async function(req, res, next) {
     res.redirect(`/project/viewproject/${PID}/${TID}`);
 });
 
-router.post('/deletephase', async function(req, res, next) {
+router.post('/deletephase', async function (req, res, next) {
     const PID = req.body.PID;
     const TID = req.body.TID;
     const phaseID = req.body.phaseID;
@@ -173,7 +200,7 @@ router.post('/deletephase', async function(req, res, next) {
 });
 
 
-router.post('/editproject', async function(req, res, next) {
+router.post('/editproject', async function (req, res, next) {
     const PID = req.body.PID;
     const projectName = req.body.editProjectName;
     const partnerProject = req.body.editParterProject;
@@ -184,26 +211,95 @@ router.post('/editproject', async function(req, res, next) {
     res.redirect('/project');
 });
 
-router.post('/deleteproject', async function(req, res, next) {
+router.post('/deleteproject', async function (req, res, next) {
     const PID = req.body.PID;
     await db.deleteProject(PID);
     await db.deleteTask(PID);
     res.redirect('/project');
 });
 
-router.get('/manpower/staff', async function(req, res, next) {
+router.get('/manpower/staff', async function (req, res, next) {
     const staff = await db.getStaff();
     const postion = await db.getPosition();
-    res.render('Staff', { Staffs: staff.recordset, Positions: postion.recordset });
+
+    var objectStaff = [];
+    for (const key in staff.recordset) {
+
+        var formatStartDate =
+            staff.recordset[key].StartDate.substring(8, 10) + "/"
+            + staff.recordset[key].StartDate.substring(5, 7) + "/"
+            + staff.recordset[key].StartDate.substring(0, 4)
+
+        if (staff.recordset[key].EndDate != '') {
+            var formatEndDate =
+                staff.recordset[0].EndDate.substring(8, 10) + "/"
+                + staff.recordset[0].EndDate.substring(5, 7) + "/"
+                + staff.recordset[0].EndDate.substring(0, 4)
+        } else {
+            var formatEndDate = staff.recordset[0].EndDate
+        }
+
+        objectStaff[key] = {
+            EID: staff.recordset[key].EID,
+            Title: staff.recordset[key].Title,
+            Name: staff.recordset[key].Name,
+            SurName: staff.recordset[key].SurName,
+            NickName: staff.recordset[key].NickName,
+            Position: staff.recordset[key].Position,
+            StartDate: formatStartDate,
+            EndDate: formatEndDate,
+            Tel: staff.recordset[key].Tel,
+            Email: staff.recordset[key].Email,
+            Active: staff.recordset[key].Active,
+
+        }
+    }
+
+
+    res.render('Staff', { Staffs: objectStaff, Positions: postion.recordset });
 });
 
-router.get('/manpower/outsource', async function(req, res, next) {
+router.get('/manpower/outsource', async function (req, res, next) {
     const staff = await db.getOutsouce();
     const postion = await db.getPosition();
-    res.render('Outsource', { Staffs: staff.recordset, Positions: postion.recordset });
+
+    var objectStaff = [];
+    for (const key in staff.recordset) {
+
+        var formatStartDate =
+            staff.recordset[key].StartDate.substring(8, 10) + "/"
+            + staff.recordset[key].StartDate.substring(5, 7) + "/"
+            + staff.recordset[key].StartDate.substring(0, 4)
+
+        if (staff.recordset[key].EndDate != '') {
+            var formatEndDate =
+                staff.recordset[0].EndDate.substring(8, 10) + "/"
+                + staff.recordset[0].EndDate.substring(5, 7) + "/"
+                + staff.recordset[0].EndDate.substring(0, 4)
+        } else {
+            var formatEndDate = staff.recordset[0].EndDate
+        }
+
+        objectStaff[key] = {
+            ID: staff.recordset[key].ID,
+            Title: staff.recordset[key].Title,
+            Name: staff.recordset[key].Name,
+            SurName: staff.recordset[key].SurName,
+            NickName: staff.recordset[key].NickName,
+            Position: staff.recordset[key].Position,
+            StartDate: formatStartDate,
+            EndDate: formatEndDate,
+            Tel: staff.recordset[key].Tel,
+            Email: staff.recordset[key].Email,
+            Active: staff.recordset[key].Active,
+
+        }
+    }
+
+    res.render('Outsource', { Staffs: objectStaff, Positions: postion.recordset });
 });
 
-router.post('/addstaff', async function(req, res, next) {
+router.post('/addstaff', async function (req, res, next) {
     const ID = req.body.ID;
     const Title = req.body.Title;
     const Name = req.body.Name;
@@ -220,7 +316,7 @@ router.post('/addstaff', async function(req, res, next) {
     res.redirect('/manpower/staff')
 });
 
-router.post('/addoutsource', async function(req, res, next) {
+router.post('/addoutsource', async function (req, res, next) {
     const ID = req.body.ID;
     const Title = req.body.Title;
     const Name = req.body.Name;
@@ -237,21 +333,21 @@ router.post('/addoutsource', async function(req, res, next) {
     res.redirect('/manpower/outsource')
 });
 
-router.get('/editstaff/:ID', async function(req, res, next) {
+router.get('/editstaff/:ID', async function (req, res, next) {
     const ID = req.params.ID
     const result = await db.getStaffByID(ID);
     const postion = await db.getPosition();
     res.render('EditStaff', { Staffs: result.recordset[0], Positions: postion.recordset });
 });
 
-router.get('/editoutsource/:ID', async function(req, res, next) {
+router.get('/editoutsource/:ID', async function (req, res, next) {
     const ID = req.params.ID
     const result = await db.getOutsouceByID(ID);
     const postion = await db.getPosition();
     res.render('EditOutsource', { Staffs: result.recordset[0], Positions: postion.recordset });
 });
 
-router.post('/updatestaff', async function(req, res, next) {
+router.post('/updatestaff', async function (req, res, next) {
     const editID = req.body.editID;
     const ID = req.body.ID;
     const Title = req.body.Title;
@@ -269,7 +365,7 @@ router.post('/updatestaff', async function(req, res, next) {
     res.redirect('/manpower/staff');
 });
 
-router.post('/updateoutsource', async function(req, res, next) {
+router.post('/updateoutsource', async function (req, res, next) {
     const editID = req.body.editID;
     const ID = req.body.ID;
     const Title = req.body.Title;
@@ -287,30 +383,30 @@ router.post('/updateoutsource', async function(req, res, next) {
     res.redirect('/manpower/outsource');
 });
 
-router.post('/deletestaff', async function(req, res, next) {
+router.post('/deletestaff', async function (req, res, next) {
     const EID = req.body.EID;
     await db.deleteStaff(EID);
     res.redirect('/manpower/staff');
 });
 
-router.post('/deleteoutsource', async function(req, res, next) {
+router.post('/deleteoutsource', async function (req, res, next) {
     const ID = req.body.ID;
     await db.deleteOutsource(ID);
     res.redirect('/manpower/outsource');
 });
 
-router.get('/position', async function(req, res, next) {
+router.get('/position', async function (req, res, next) {
     const result = await db.getPosition();
     res.render('Position', { Positions: result.recordset });
 });
 
-router.get('/editposition/:PosID', async function(req, res, next) {
+router.get('/editposition/:PosID', async function (req, res, next) {
     const PosID = req.params.PosID;
     const result = await db.getPositionByID(PosID);
     res.render('EditPosition', { Positions: result.recordset[0] });
 });
 
-router.post('/updatePosition', async function(req, res, next) {
+router.post('/updatePosition', async function (req, res, next) {
     const PosID = req.body.PosID;
     const Position = req.body.Position;
     const Description = req.body.Description;
@@ -320,7 +416,7 @@ router.post('/updatePosition', async function(req, res, next) {
     res.redirect('/position');
 });
 
-router.post('/addposition', async function(req, res, next) {
+router.post('/addposition', async function (req, res, next) {
     const Position = req.body.Position;
     const Description = req.body.Description;
     const Cost = req.body.Cost;
@@ -329,25 +425,49 @@ router.post('/addposition', async function(req, res, next) {
     res.redirect('/position');
 });
 
-router.post('/deleteposition', async function(req, res, next) {
+router.post('/deleteposition', async function (req, res, next) {
     const PosID = req.body.PosID;
     await db.deletePosition(PosID);
     res.redirect('/position');
 });
 
-router.get('/leave/staff', async function(req, res, next) {
+router.get('/leave/staff', async function (req, res, next) {
     const staff = await db.getStaff();
     res.render('LeaveStaff', { Staffs: staff.recordset });
 });
 
-router.get('/leave/outsource', async function(req, res, next) {
+router.get('/leave/outsource', async function (req, res, next) {
     const staff = await db.getOutsouce();
     res.render('LeaveOutsource', { Staffs: staff.recordset });
 });
 
-router.get('/viewleave/:ID', async function(req, res, next) {
+router.get('/viewleave/:ID', async function (req, res, next) {
     const ID = req.params.ID
     const getLeaveByID = await db.getLeaveByID(ID);
+
+    var objectLeave = [];
+
+    for (const key in getLeaveByID.recordset) {
+        var formatStartDate =
+            getLeaveByID.recordset[key].StartDate.substring(8, 10) + "/"
+            + getLeaveByID.recordset[key].StartDate.substring(5, 7) + "/"
+            + getLeaveByID.recordset[key].StartDate.substring(0, 4)
+
+        var formatEndDate =
+            getLeaveByID.recordset[key].EndDate.substring(8, 10) + "/"
+            + getLeaveByID.recordset[key].EndDate.substring(5, 7) + "/"
+            + getLeaveByID.recordset[key].EndDate.substring(0, 4)
+
+        objectLeave[key] = {
+            LID: getLeaveByID.recordset[key].LID,
+            StartDate: formatStartDate,
+            EndDate: formatEndDate,
+            Annotation: getLeaveByID.recordset[key].Annotation,
+            Days: getLeaveByID.recordset[key].Days,
+            ID: getLeaveByID.recordset[key].ID,
+        }
+    }
+
     var staff;
     var output;
     if (ID.substring(0, 1) == "O") {
@@ -365,10 +485,10 @@ router.get('/viewleave/:ID', async function(req, res, next) {
             SurName: staff.recordset[0].SurName,
         }
     }
-    res.render('Leave', { Staffs: output, Leaves: getLeaveByID.recordset })
+    res.render('Leave', { Staffs: output, Leaves: objectLeave })
 });
 
-router.post('/addLeave', async function(req, res, next) {
+router.post('/addLeave', async function (req, res, next) {
     const ID = req.body.ID;
     const StartDate = req.body.StartDate;
     const EndDate = req.body.EndDate;
@@ -379,19 +499,19 @@ router.post('/addLeave', async function(req, res, next) {
     res.redirect(`/viewleave/${ID}`);
 });
 
-router.post('/deleteleave', async function(req, res, next) {
+router.post('/deleteleave', async function (req, res, next) {
     const LID = req.body.LID;
     const ID = req.body.ID;
     await db.deleteLeaveByLID(LID);
     res.redirect(`/viewleave/${ID}`);
 });
 
-router.get('/Holiday', async function(req, res, next) {
+router.get('/Holiday', async function (req, res, next) {
     const result = await db.getHoliday();
     res.render('Holiday', { Holidays: result.recordset });
 });
 
-router.post('/addHoliday', async function(req, res, next) {
+router.post('/addHoliday', async function (req, res, next) {
     const Subject = req.body.Subject
     const StartDate = req.body.StartDate;
     const EndDate = req.body.EndDate;
@@ -405,14 +525,14 @@ router.post('/addHoliday', async function(req, res, next) {
     res.redirect('/Holiday');
 });
 
-router.post('/deleteHoliday', async function(req, res, next) {
+router.post('/deleteHoliday', async function (req, res, next) {
     const Subject = req.body.Subject;
     await db.deleteHoliday(Subject);
     res.redirect('/Holiday');
 });
 
 
-router.get('/projectposition/:PID', async function(req, res, next) {
+router.get('/projectposition/:PID', async function (req, res, next) {
     const PID = req.params.PID;
     const Project = await db.getProjectByID(PID);
     const Manpowers = await db.getManpowerInProject(PID);
@@ -462,7 +582,7 @@ router.get('/projectposition/:PID', async function(req, res, next) {
 
 
             const DayHoliday = await db.getHolidayBetweenDate(StartDate, EndDate, Month)
-                //console.log(DayHoliday.recordset);
+            //console.log(DayHoliday.recordset);
 
 
             date = await db.calculateDate(Usage);
@@ -506,19 +626,18 @@ router.get('/projectposition/:PID', async function(req, res, next) {
     res.render('ProjectPosition', { Manpowers: ObjectManpowerUsage, Total: TotalCost, Project: Project.recordset[0] });
 });
 
-router.post('/report/:PID', async function(req, res, next) {
+router.post('/report/:PID', async function (req, res, next) {
     const PID = req.params.PID;
     const Month = await db.getMonthInProject(PID);
     res.redirect(`/report/${PID}/${Month.recordset[0].Month}`);
 });
 
 
-router.get('/report/:PID/:Month', async function(req, res, next) {
+router.get('/report/:PID/:Month', async function (req, res, next) {
     const PID = req.params.PID;
     const month = req.params.Month;
     const arrayMonth = ["", "January", "February", "March", "April", "May", "June", "July",
-        "August", "September", "October", "November", "December"
-    ];
+        "August", "September", "October", "November", "December"];
 
 
     if (month.length == 1) {
@@ -527,52 +646,67 @@ router.get('/report/:PID/:Month', async function(req, res, next) {
         var monthModify = month;
     }
 
-
     const getProject = await db.getProjectByID(PID);
-
-
     const getManpower = await db.getManpowerOfProject(PID, monthModify);
-
-
-    const getHolidayInMonth = await db.getHolidayInMonth(month);
-
-
     const getMonthInProject = await db.getMonthInProject(PID);
-
     var manpowerObject = [];
-    let nameManpower = "";
-
 
     for (const key in getManpower.recordset) {
 
-
         const getIdEmployee = await db.checkIdEmployee(getManpower.recordset[key].Manpower);
         const getIdOutsource = await db.checkIdOutsouce(getManpower.recordset[key].Manpower);
+        const getUsageofManpower = await
+            db.getUsageInMonth(getManpower.recordset[key].Manpower, monthModify, getProject.recordset[0].Name);
 
+        var getHour = 0;
+        var getTotalHour = 0;
+        var getLeave = 0;
+        for (const index in getUsageofManpower.recordset) {
+            const date = await db.calculateDate(getUsageofManpower.recordset[index]);
 
-        if (getIdEmployee.recordset[0] != null) {
-            nameManpower = getManpower.recordset[key].Manpower;
-            // Leave
-            var getLeaveDay = await db.getLeaveInMonth(getIdEmployee.recordset[0].EID, monthModify)
-        } else {
+            var getDay = date.recordset[0].Day;
+            var getUsage = getUsageofManpower.recordset[index].Usage;
 
-            nameManpower = getManpower.recordset[key].Manpower;
+            if (getIdEmployee.recordset[0] != null) {
+                const ID = getIdEmployee.recordset[0].EID;
+                var Leave = await db.getLeaveInPhase(ID, getUsageofManpower.recordset[index])
+            } else {
+                const ID = getIdOutsource.recordset[0].ID;
+                var Leave = await db.getLeaveInPhase(ID, getUsageofManpower.recordset[index])
+            }
 
-            var getLeaveDay = await db.getLeaveInMonth(getIdOutsource.recordset[0].ID, monthModify)
+            const convertStartDate =
+                getUsageofManpower.recordset[index].StartDate.substring(8, 10) + "/" +
+                getUsageofManpower.recordset[index].StartDate.substring(5, 7) + "/" +
+                getUsageofManpower.recordset[index].StartDate.substring(0, 4)
+
+            const convertEndDate =
+                getUsageofManpower.recordset[index].EndDate.substring(8, 10) + "/" +
+                getUsageofManpower.recordset[index].EndDate.substring(5, 7) + "/" +
+                getUsageofManpower.recordset[index].EndDate.substring(0, 4)
+
+            const Holiday = await db.getHolidayInPhase(convertStartDate, convertEndDate, monthModify)
+
+            for (const i in Leave.recordset) {
+                getLeave = getLeave + Leave.recordset[i].Days
+            }
+
+            getHour = getHour + (((getDay - parseInt(getLeave) - Holiday.recordset.length) * 8) * (parseInt(getUsage) / 100))
+            getTotalHour = getTotalHour + (parseInt(getLeave) * 8)
         }
 
         manpowerObject[key] = {
-            Name: nameManpower,
-            Leave: getLeaveDay.recordset,
+            Name: getManpower.recordset[key].Manpower,
+            Hour: Math.round(getHour),
+            TotalHour: getTotalHour,
         }
     }
+
     res.render('ReportProject', {
         ObjectManpower: manpowerObject,
-        Holiday: getHolidayInMonth.recordset,
         Project: getProject.recordset[0],
         Months: getMonthInProject.recordset,
         monthName: arrayMonth[month],
-        monthTarget: month,
     });
 });
 

@@ -2,10 +2,11 @@ const sql = require("mssql");
 
 // config for your database
 var config = {
-    user: "sa",
-    password: "123456",
-    server: "DESKTOP-EPN3ERQ", // You can use 'localhost\\instance' to connect to named instance
-    database: "ICONEXT_Database",
+    user: "psuaccount",
+    password: "psuaccount*123",
+    server: "117.121.215.99", // You can use 'localhost\\instance' to connect to named instance
+    database: "ManpowerPSU",
+    port:14398,
     options: {
         "enableArithAbort": true,
         "encrypt": true,

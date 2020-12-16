@@ -6,7 +6,7 @@ const db = require("../database/database");
 router.use(bodyParser.urlencoded({ extended: true }));
 
 /* GET home page. */
-router.get('/project', async function (req, res, next) {
+router.get('/', async function (req, res, next) {
     const result = await db.getProject();
     res.render('index', { Projects: result.recordset });
 });
@@ -33,7 +33,7 @@ router.post('/createproject', async function (req, res, next) {
 
     await db.addProject(addProject);
 
-    res.redirect('/project');
+    res.redirect('/');
 });
 
 router.get('/project/editproject/:PID', async function (req, res, next) {
@@ -208,14 +208,14 @@ router.post('/editproject', async function (req, res, next) {
     const dateProject = req.body.editDateProject;
     const updateProject = [PID, projectName, partnerProject, custtomerProject, dateProject];
     await db.updateProject(updateProject);
-    res.redirect('/project');
+    res.redirect('/');
 });
 
 router.post('/deleteproject', async function (req, res, next) {
     const PID = req.body.PID;
     await db.deleteProject(PID);
     await db.deleteTask(PID);
-    res.redirect('/project');
+    res.redirect('/');
 });
 
 router.get('/manpower/staff', async function (req, res, next) {

@@ -2,10 +2,10 @@ const sql = require("mssql");
 
 // config for your database
 var config = {
-    user: "psuaccount",
-    password: "psuaccount*123",
-    server: "117.121.215.99", // You can use 'localhost\\instance' to connect to named instance
-    database: "ManpowerPSU",
+    user: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD,
+    server: process.env.DATABASE_HOST, // You can use 'localhost\\instance' to connect to named instance
+    database: process.env.DATABASE_NAME,
     port:14398,
     options: {
         "enableArithAbort": true,

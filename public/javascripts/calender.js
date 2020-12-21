@@ -11,6 +11,9 @@ function getCalender(data) {
             if (parse_data[key].End_Date != null) {
                 var EndDate = parse_data[key].End_Date;
                 var plusDate = parseInt(EndDate.substring(0, 2)) + 1;
+                if(plusDate.toString().length == 1){
+                    plusDate = 0 + plusDate.toString()
+                }
                 var setEndDate = EndDate.substring(6, 10) + "-" + EndDate.substring(3, 5) + "-" + plusDate;
             }
         
@@ -22,7 +25,6 @@ function getCalender(data) {
             }
         }
     }
-    
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {

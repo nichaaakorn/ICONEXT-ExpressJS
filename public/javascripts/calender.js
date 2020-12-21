@@ -1,5 +1,6 @@
 function getCalender(data) {
     const parse_data = JSON.parse(data);
+    const getDate = formatDate(new Date());
     let eventObj = [];
     for (const key in parse_data) {
         if (parse_data.hasOwnProperty(key)) {
@@ -9,8 +10,10 @@ function getCalender(data) {
             var setEndDate = null;
             if (parse_data[key].End_Date != null) {
                 var EndDate = parse_data[key].End_Date;
-                var setEndDate = EndDate.substring(6, 10) + "-" + EndDate.substring(3, 5) + "-" + EndDate.substring(0, 2);
+                var plusDate = parseInt(EndDate.substring(0, 2)) + 1;
+                var setEndDate = EndDate.substring(6, 10) + "-" + EndDate.substring(3, 5) + "-" + plusDate;
             }
+        
 
             eventObj[key] = {
                 title: parse_data[key].Subject,
@@ -19,11 +22,12 @@ function getCalender(data) {
             }
         }
     }
+    
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            initialDate: '2020-11-07',
+            initialDate: getDate,
             selectable: true,
             headerToolbar: {
                 left: 'prev,next today',
@@ -95,4 +99,18 @@ function getCalender(data) {
         });
         calendar.render();
     });
+}
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
 }

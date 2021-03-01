@@ -56,13 +56,13 @@ router.get('/project/viewproject/:PID/:TID', async function (req, res, next) {
     var objectPhase = [];
     for (const key in getPhase.recordset) {
         var formatStartDate =
-            getPhase.recordset[key].StartDate.substring(8, 10) + "/"
-            + getPhase.recordset[key].StartDate.substring(5, 7) + "/"
+            getPhase.recordset[key].StartDate.substring(5, 7) + "/"
+            + getPhase.recordset[key].StartDate.substring(8, 10) + "/"
             + getPhase.recordset[key].StartDate.substring(0, 4)
 
         var formatEndDate =
-            getPhase.recordset[key].EndDate.substring(8, 10) + "/"
-            + getPhase.recordset[key].EndDate.substring(5, 7) + "/"
+            getPhase.recordset[key].EndDate.substring(5, 7) + "/"
+            + getPhase.recordset[key].EndDate.substring(8, 10) + "/"
             + getPhase.recordset[key].EndDate.substring(0, 4)
 
 
@@ -226,14 +226,14 @@ router.get('/manpower/staff', async function (req, res, next) {
     for (const key in staff.recordset) {
 
         var formatStartDate =
-            staff.recordset[key].StartDate.substring(8, 10) + "/"
-            + staff.recordset[key].StartDate.substring(5, 7) + "/"
+            staff.recordset[key].StartDate.substring(5, 7) + "/"
+            + staff.recordset[key].StartDate.substring(8, 10) + "/"
             + staff.recordset[key].StartDate.substring(0, 4)
 
         if (staff.recordset[key].EndDate != '') {
             var formatEndDate =
-                staff.recordset[0].EndDate.substring(8, 10) + "/"
-                + staff.recordset[0].EndDate.substring(5, 7) + "/"
+                staff.recordset[0].EndDate.substring(5, 7) + "/"
+                + staff.recordset[0].EndDate.substring(8, 10) + "/"
                 + staff.recordset[0].EndDate.substring(0, 4)
         } else {
             var formatEndDate = staff.recordset[0].EndDate
@@ -267,14 +267,14 @@ router.get('/manpower/outsource', async function (req, res, next) {
     for (const key in staff.recordset) {
 
         var formatStartDate =
-            staff.recordset[key].StartDate.substring(8, 10) + "/"
-            + staff.recordset[key].StartDate.substring(5, 7) + "/"
+            staff.recordset[key].StartDate.substring(5, 7) + "/"
+            + staff.recordset[key].StartDate.substring(8, 10) + "/"
             + staff.recordset[key].StartDate.substring(0, 4)
 
         if (staff.recordset[key].EndDate != '') {
             var formatEndDate =
-                staff.recordset[0].EndDate.substring(8, 10) + "/"
-                + staff.recordset[0].EndDate.substring(5, 7) + "/"
+                staff.recordset[0].EndDate.substring(5, 7) + "/"
+                + staff.recordset[0].EndDate.substring(8, 10) + "/"
                 + staff.recordset[0].EndDate.substring(0, 4)
         } else {
             var formatEndDate = staff.recordset[0].EndDate
@@ -449,13 +449,13 @@ router.get('/viewleave/:ID', async function (req, res, next) {
 
     for (const key in getLeaveByID.recordset) {
         var formatStartDate =
-            getLeaveByID.recordset[key].StartDate.substring(8, 10) + "/"
-            + getLeaveByID.recordset[key].StartDate.substring(5, 7) + "/"
+            getLeaveByID.recordset[key].StartDate.substring(5, 7) + "/"
+            + getLeaveByID.recordset[key].StartDate.substring(8, 10) + "/"
             + getLeaveByID.recordset[key].StartDate.substring(0, 4)
 
         var formatEndDate =
-            getLeaveByID.recordset[key].EndDate.substring(8, 10) + "/"
-            + getLeaveByID.recordset[key].EndDate.substring(5, 7) + "/"
+            getLeaveByID.recordset[key].EndDate.substring(5, 7) + "/"
+            + getLeaveByID.recordset[key].EndDate.substring(8, 10) + "/"
             + getLeaveByID.recordset[key].EndDate.substring(0, 4)
 
         objectLeave[key] = {
@@ -495,7 +495,9 @@ router.post('/addLeave', async function (req, res, next) {
     const Annotation = req.body.Annotation;
     const Days = await db.calculateDate({ StartDate: StartDate, EndDate: EndDate });
     const addLeave = [StartDate, EndDate, Annotation, Days.recordset[0].Day, ID]
-    await db.addLeave(addLeave);
+    if (EndDate > StartDate) {
+        await db.addLeave(addLeave);
+    }
     res.redirect(`/viewleave/${ID}`);
 });
 
